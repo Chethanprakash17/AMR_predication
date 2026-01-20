@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}About Antimicrobial Resistance{% endblock %}
+
+{% block content %}
+<!-- Introduction -->
+<div class="content-section">
+    <h2>Understanding Antimicrobial Resistance (AMR)</h2>
+    <p>
+        <strong>Antimicrobial resistance (AMR)</strong> occurs when bacteria, viruses, fungi, and parasites evolve to
+        resist
+        the effects of medications designed to kill them or stop their growth. This makes infections harder to treat and
+        increases the risk of disease spread, severe illness, and death.
+    </p>
+
+    <div class="alert alert-warning">
+        <strong>Global Health Threat:</strong> The World Health Organization (WHO) has declared AMR one of the top 10
+        global
+        public health threats facing humanity. Without effective antimicrobials, common infections and minor injuries
+        could
+        once again become life-threatening.
+    </div>
+</div>
+
+<!-- AMR in ICU Settings -->
+<div class="content-section">
+    <h2>Why AMR is Critical in ICU Settings</h2>
+    <p>
+        Intensive Care Units (ICUs) present a particularly high-risk environment for antimicrobial resistance due to
+        several factors:
+    </p>
+
+    <div class="card-grid">
+        <div class="card">
+            <h3>🏥 Vulnerable Patients</h3>
+            <p>ICU patients are critically ill with weakened immune systems, making them highly susceptible to resistant
+                infections.</p>
+        </div>
+
+        <div class="card">
+            <h3>💊 High Antibiotic Use</h3>
+            <p>ICUs use broad-spectrum antibiotics extensively, creating selective pressure that promotes resistant
+                bacteria.</p>
+        </div>
+
+        <div class="card">
+            <h3>🔌 Invasive Devices</h3>
+            <p>Ventilators, catheters, and IV lines provide entry points for bacteria, increasing infection risk.</p>
+        </div>
+
+        <div class="card">
+            <h3>🦠 Close Proximity</h3>
+            <p>ICU environments facilitate transmission of resistant pathogens between patients despite infection
+                control measures.</p>
+        </div>
+    </div>
+
+    <p style="margin-top: 1.5rem;">
+        Studies show that <strong>ICU-acquired infections are significantly more likely to be caused by
+            multidrug-resistant organisms</strong>
+        compared to infections acquired in other hospital settings. This makes early identification of AMR risk crucial
+        for patient outcomes.
+    </p>
+</div>
+
+<!-- The Diagnostic Delay Problem -->
+<div class="content-section">
+    <h2>The 48-72 Hour Microbiology Culture Delay</h2>
+
+    <p>
+        Traditional microbiology culture testing remains the gold standard for identifying pathogens and determining
+        their
+        antimicrobial susceptibilities. However, this process has a significant limitation: <strong>time</strong>.
+    </p>
+
+    <h3>Typical Culture Timeline:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Time Point</th>
+                <th>Process</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0 hours</td>
+                <td>Sample collection (blood, sputum, urine, etc.)</td>
+                <td>Initial specimen obtained</td>
+            </tr>
+            <tr>
+                <td>0-6 hours</td>
+                <td>Sample transport and laboratory processing</td>
+                <td>Culture inoculation</td>
+            </tr>
+            <tr>
+                <td>24-48 hours</td>
+                <td>Bacterial growth and preliminary identification</td>
+                <td>Pathogen detected</td>
+            </tr>
+            <tr>
+                <td>48-72 hours</td>
+                <td>Antimicrobial susceptibility testing (AST)</td>
+                <td><strong>Resistance profile available</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="alert alert-danger" style="margin-top: 1rem;">
+        <strong>Clinical Impact:</strong> During this 48-72 hour delay, clinicians must make empirical treatment
+        decisions
+        without knowing if the pathogen is resistant to the chosen antibiotics. Inappropriate initial therapy is
+        associated
+        with increased mortality, longer hospital stays, and higher healthcare costs.
+    </div>
+
+    <h3 style="margin-top: 1.5rem;">The Dilemma:</h3>
+    <ul class="feature-list">
+        <li><strong>Narrow-Spectrum Antibiotics:</strong> May be ineffective if the pathogen is resistant, risking
+            patient deterioration</li>
+        <li><strong>Broad-Spectrum Antibiotics:</strong> More likely to be effective but contribute to antimicrobial
+            resistance development</li>
+        <li><strong>Combination Therapy:</strong> May be overly aggressive and increase toxicity risks</li>
+    </ul>
+</div>
+
+<!-- Early Risk Prediction Solution -->
+<div class="content-section">
+    <h2>How Early Risk Prediction Supports Clinicians</h2>
+
+    <p>
+        By leveraging machine learning to analyze readily available EHR data, our system
+        provides
+        an <strong>early AMR risk assessment</strong> that can inform clinical decision-making before culture results
+        are available.
+    </p>
+
+    <h3>Potential Clinical Applications:</h3>
+    <div class="card-grid">
+        <div class="card">
+            <h3>🎯 Targeted Therapy</h3>
+            <p>High AMR risk scores may guide clinicians toward broader-spectrum empirical therapy while awaiting
+                cultures.</p>
+        </div>
+
+        <div class="card">
+            <h3>🔬 Enhanced Surveillance</h3>
+            <p>Identify high-risk patients for enhanced infection control measures and closer monitoring.</p>
+        </div>
+
+        <div class="card">
+            <h3>📊 Resource Allocation</h3>
+            <p>Optimize limited resources (e.g., isolation rooms) for patients at highest AMR risk.</p>
+        </div>
+
+        <div class="card">
+            <h3>📚 Stewardship Support</h3>
+            <p>Provide data-driven insights to antimicrobial stewardship programs for better prescribing practices.</p>
+        </div>
+    </div>
+
+    <div class="alert alert-info" style="margin-top: 1.5rem;">
+        <strong>Important Note:</strong> Early risk prediction does not replace microbiology testing. Culture results
+        remain
+        essential for definitive pathogen identification and targeted therapy. Our system provides complementary
+        information
+        to support clinical judgment during the critical early hours of ICU admission.
+    </div>
+</div>
+
+<!-- Key Facts -->
+<div class="content-section">
+    <h2>Key Facts About AMR</h2>
+    <ul class="feature-list">
+        <li>At least 700,000 people die each year globally due to drug-resistant infections</li>
+        <li>By 2050, AMR could cause 10 million deaths annually if left unaddressed</li>
+        <li>Resistant infections increase hospital length of stay by an average of 6-8 days</li>
+        <li>ICU patients are 2-3 times more likely to acquire resistant infections than general ward patients</li>
+        <li>Inappropriate initial antibiotic therapy is associated with 2-7 fold increased mortality in severe
+            infections</li>
+    </ul>
+
+    <p style="margin-top: 1rem; font-style: italic; color: var(--text-light);">
+        Sources: World Health Organization (WHO), Centers for Disease Control and Prevention (CDC),
+        European Centre for Disease Prevention and Control (ECDC)
+    </p>
+</div>
+{% endblock %}

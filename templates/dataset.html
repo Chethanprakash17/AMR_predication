@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+
+{% block title %}Dataset & Methodology{% endblock %}
+
+{% block content %}
+<!-- Dataset Section -->
+<div class="content-section">
+    <h2>Dataset: MIMIC-IV ICU Clinical Database</h2>
+
+    <p>
+        This project utilizes the <strong>MIMIC-IV (Medical Information Mart for Intensive Care IV)</strong> database,
+        a freely accessible critical care database developed by the MIT Lab for Computational Physiology.
+    </p>
+
+    <h3>Dataset Overview</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Attribute</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Source</strong></td>
+                <td>Beth Israel Deaconess Medical Center (Boston, MA)</td>
+            </tr>
+            <tr>
+                <td><strong>Data Provider</strong></td>
+                <td>PhysioNet - MIT Lab for Computational Physiology</td>
+            </tr>
+            <tr>
+                <td><strong>Time Period</strong></td>
+                <td>2008-2019</td>
+            </tr>
+            <tr>
+                <td><strong>Total ICU Admissions</strong></td>
+                <td>~76,000 admissions</td>
+            </tr>
+            <tr>
+                <td><strong>Curated Dataset Size</strong></td>
+                <td>~30,000-40,000 admissions (after filtering)</td>
+            </tr>
+            <tr>
+                <td><strong>Access</strong></td>
+                <td>Requires CITI training and PhysioNet credentialing</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 style="margin-top: 1.5rem;">CSV Files Used in This Project</h3>
+    <ul class="feature-list">
+        <li><code>patients.csv</code> - Patient demographics (age, gender)</li>
+        <li><code>admissions.csv</code> - Hospital admission details (admission type, admission time)</li>
+        <li><code>icustays.csv</code> - ICU stay information (ICU admission/discharge times)</li>
+        <li><code>diagnoses_icd.csv</code> - ICD diagnosis codes for identifying comorbidities</li>
+        <li><code>prescriptions.csv</code> - Medication prescriptions (antibiotic history)</li>
+        <li><code>labevents.csv</code> - Laboratory test results (WBC, creatinine, lactate, etc.)</li>
+        <li><code>chartevents.csv</code> - Vital signs and clinical observations (HR, BP, temperature, SpO2)</li>
+        <li><code>microbiologyevents.csv</code> - Microbiology culture results (used for labeling only)</li>
+    </ul>
+
+    <div class="alert alert-info">
+        <strong>Data Preprocessing:</strong> The raw MIMIC-IV dataset was filtered to include only ICU admissions with
+        sufficient data and available microbiology results for labeling. Admissions with
+        incomplete
+        records or missing critical features were excluded to ensure data quality.
+    </div>
+</div>
+
+<!-- Feature Engineering Section -->
+<div class="content-section">
+    <h2>Feature Engineering</h2>
+
+    <p>
+        All features are derived exclusively from data available within the initial hours of ICU
+        admission
+        to ensure the model provides early risk prediction before traditional culture results are available.
+    </p>
+
+    <h3>Feature Categories</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Features</th>
+                <th>Data Source</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Demographics</strong></td>
+                <td>
+                    • Age (years)<br>
+                    • Gender (Male/Female)<br>
+                    • Admission type (Emergency, Elective, Urgent)
+                </td>
+                <td>patients.csv, admissions.csv</td>
+            </tr>
+            <tr>
+                <td><strong>Comorbidities</strong></td>
+                <td>
+                    • Diabetes mellitus<br>
+                    • Chronic kidney disease (CKD)<br>
+                    • Chronic obstructive pulmonary disease (COPD)<br>
+                    • Cancer/malignancy<br>
+                    • Immunosuppression
+                </td>
+                <td>diagnoses_icd.csv (ICD-9/10 codes)</td>
+            </tr>
+            <tr>
+                <td><strong>Prior Antibiotic Exposure</strong></td>
+                <td>
+                    • Any antibiotic use in past 90 days<br>
+                    • Broad-spectrum antibiotic exposure
+                </td>
+                <td>prescriptions.csv</td>
+            </tr>
+            <tr>
+                <td><strong>Early Vital Signs</strong></td>
+                <td>
+                    • Average heart rate (bpm)<br>
+                    • Average temperature (°C)<br>
+                    • Average blood pressure (mmHg)<br>
+                    • Average SpO2 (%)
+                </td>
+                <td>chartevents.csv (first 24h)</td>
+            </tr>
+            <tr>
+                <td><strong>Early Laboratory Values</strong></td>
+                <td>
+                    • White blood cell (WBC) count<br>
+                    • Serum creatinine<br>
+                    • Serum lactate<br>
+                    • C-reactive protein (CRP) / Procalcitonin (if available)
+                </td>
+                <td>labevents.csv (first 24h)</td>
+            </tr>
+            <tr>
+                <td><strong>ICU Context</strong></td>
+                <td>
+                    • Mechanical ventilation (Yes/No)<br>
+                    • Invasive devices (central lines, urinary catheters)<br>
+                    • ICU admission source
+                </td>
+                <td>chartevents.csv, icustays.csv</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="alert alert-warning" style="margin-top: 1rem;">
+        <strong>⚠ Temporal Constraint:</strong> Features must be available within 24 hours to ensure practical clinical
+        utility.
+        Any data recorded after the 24-hour mark is excluded to prevent data leakage.
+    </div>
+
+    <h3 style="margin-top: 1.5rem;">Feature Processing Steps</h3>
+    <ol class="numbered-list">
+        <li><strong>Time Filtering:</strong> Extract only records within first 24 hours of ICU admission</li>
+        <li><strong>Aggregation:</strong> Calculate mean, median, min, max for vital signs and lab values</li>
+        <li><strong>Missing Value Handling:</strong> Use median imputation for continuous variables, mode for
+            categorical variables</li>
+        <li><strong>Encoding:</strong> One-hot encoding for categorical features (gender, admission type)</li>
+        <li><strong>Normalization:</strong> Standardize continuous features (z-score normalization)</li>
+    </ol>
+</div>
+
+<!-- Labeling Section -->
+<div class="content-section">
+    <h2>Labeling Methodology</h2>
+
+    <p>
+        The target variable (AMR presence) is derived from microbiology culture results recorded in
+        <code>microbiologyevents.csv</code>.
+    </p>
+
+    <h3>Labeling Strategy</h3>
+    <div class="card-grid">
+        <div class="card">
+            <h3>Positive Label (AMR = 1)</h3>
+            <p>
+                Patient has at least one culture result with <strong>resistant (R)</strong> susceptibility status for
+                any antibiotic tested within 7 days of ICU admission.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Negative Label (AMR = 0)</h3>
+            <p>
+                Patient has culture results showing <strong>susceptible (S)</strong> status for all antibiotics tested,
+                or no resistant organisms detected within 7 days of ICU admission.
+            </p>
+        </div>
+    </div>
+
+    <h3 style="margin-top: 1.5rem;">Patient-Level Labeling</h3>
+    <p>
+        Since patients may have multiple cultures, we use a <strong>patient-level aggregation approach</strong>:
+    </p>
+    <ul class="feature-list">
+        <li>If <strong>any culture</strong> shows resistance → Label = 1 (AMR positive)</li>
+        <li>If <strong>all cultures</strong> show susceptibility → Label = 0 (AMR negative)</li>
+        <li>Patients with inconclusive or intermediate results are excluded from training</li>
+    </ul>
+
+    <div class="alert alert-danger">
+        <strong>⚠ Critical: Preventing Data Leakage</strong><br>
+        Microbiology data is used <strong>ONLY for labeling</strong>, never as an input feature. The model cannot access
+        culture results, organism types, or susceptibility patterns during prediction. This ensures the model learns to
+        predict AMR risk from early clinical indicators alone, mimicking real-world scenarios where culture results are
+        not yet available.
+    </div>
+
+    <h3 style="margin-top: 1.5rem;">Data Distribution</h3>
+    <table style="max-width: 500px;">
+        <thead>
+            <tr>
+                <th>Label</th>
+                <th>Count</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>AMR Negative (0)</td>
+                <td>~24,000</td>
+                <td>~68%</td>
+            </tr>
+            <tr>
+                <td>AMR Positive (1)</td>
+                <td>~11,000</td>
+                <td>~32%</td>
+            </tr>
+            <tr>
+                <td><strong>Total</strong></td>
+                <td><strong>~35,000</strong></td>
+                <td><strong>100%</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 1rem;">
+        The dataset exhibits class imbalance (more negative cases than positive), which is handled through:
+    </p>
+    <ul class="feature-list">
+        <li><strong>Class weighting:</strong> Assign higher weights to positive (AMR) cases during training</li>
+        <li><strong>Evaluation focus:</strong> Prioritize recall/sensitivity to minimize false negatives</li>
+        <li><strong>Stratified sampling:</strong> Ensure balanced representation in train/test splits</li>
+    </ul>
+</div>
+
+<!-- Model Approach -->
+<div class="content-section">
+    <h2>Machine Learning Approach</h2>
+
+    <h3>Model Selection</h3>
+    <p>
+        We employ a <strong>XGBoost classifier</strong> (ensemble learning method) for the following reasons:
+    </p>
+    <ul class="feature-list">
+        <li><strong>Robustness:</strong> Handles non-linear relationships and feature interactions effectively</li>
+        <li><strong>Interpretability:</strong> Provides feature importance scores for clinical transparency</li>
+        <li><strong>Performance:</strong> Strong predictive performance on tabular healthcare data</li>
+        <li><strong>Low overfitting:</strong> Ensemble approach reduces variance</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">Training Strategy</h3>
+    <p>
+        We use a <strong>temporal train-test split</strong> to simulate real-world deployment:
+    </p>
+    <ul class="feature-list">
+        <li><strong>Training Set:</strong> ICU admissions from 2008-2017 (~70%)</li>
+        <li><strong>Test Set:</strong> ICU admissions from 2018-2019 (~30%)</li>
+        <li><strong>Rationale:</strong> Temporal split prevents data leakage and tests model generalization to future
+            time periods</li>
+    </ul>
+
+    <div class="alert alert-info">
+        <strong>Cross-Validation:</strong> 5-fold stratified cross-validation is performed on the training set for
+        hyperparameter tuning and model selection.
+    </div>
+</div>
+{% endblock %}

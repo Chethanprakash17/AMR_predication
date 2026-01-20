@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}Limitations & Ethics{% endblock %}
+
+{% block content %}
+<!-- Introduction -->
+<div class="content-section">
+    <h2>Limitations & Ethical Considerations</h2>
+    <p>
+        As an academic research prototype, it is essential to transparently acknowledge the limitations of this
+        system and address the ethical considerations surrounding AI in healthcare. This page outlines the constraints,
+        risks, and responsible use guidelines for this AMR prediction model.
+    </p>
+
+    <div class="disclaimer">
+        <strong>⚠ Critical Acknowledgment</strong>
+        This system has NOT been validated in prospective clinical trials, has NOT received regulatory approval,
+        and is NOT intended for real-world clinical use. It is developed solely for academic demonstration and
+        educational purposes as part of an Experiential Learning (EL)project.
+    </div>
+</div>
+
+<!-- Technical Limitations -->
+<div class="content-section">
+    <h2>Technical Limitations</h2>
+
+    <h3>1. Retrospective Dataset</h3>
+    <div class="alert alert-warning">
+        <strong>Limitation:</strong> The model is trained on historical data, not prospective real-time data.
+    </div>
+    <p><strong>Implications:</strong></p>
+    <ul class="feature-list">
+        <li>Cannot account for evolving resistance patterns or emerging resistant strains</li>
+        <li>May not generalize to current antimicrobial resistance epidemiology</li>
+        <li>Training data reflects 2008-2019 practices; current clinical practices may differ</li>
+        <li>No validation on recent COVID-19 era ICU patients (different patient mix, antibiotic use patterns)</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">2. Single-Center Data</h3>
+    <div class="alert alert-warning">
+        <strong>Limitation:</strong> All data comes from one hospital (Beth Israel Deaconess Medical Center, Boston).
+    </div>
+    <p><strong>Implications:</strong></p>
+    <ul class="feature-list">
+        <li>Resistance patterns vary significantly between hospitals and geographic regions</li>
+        <li>Local antibiogram data not incorporated (critical for AMR prediction)</li>
+        <li>Patient demographics and case mix may not represent other hospital settings</li>
+        <li>Model performance may degrade when applied to different hospitals without retraining</li>
+        <li>Cannot account for hospital-specific infection control practices</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">3. No Organism-Specific Predictions</h3>
+    <div class="alert alert-warning">
+        <strong>Limitation:</strong> Model predicts general AMR risk, not specific resistant organisms.
+    </div>
+    <p><strong>Implications:</strong></p>
+    <ul class="feature-list">
+        <li>Cannot distinguish between MRSA, ESBL-producing organisms, carbapenem-resistant Enterobacteriaceae (CRE),
+            etc.</li>
+        <li>Different resistant organisms require different antibiotic choices</li>
+        <li>Clinicians still need culture results for targeted therapy</li>
+        <li>Cannot predict resistance patterns for specific antibiotics</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">4. No Real-Time Hospital Integration</h3>
+    <div class="alert alert-warning">
+        <strong>Limitation:</strong> This is a standalone prototype, not integrated with hospital EHR systems.
+    </div>
+    <p><strong>Implications:</strong></p>
+    <ul class="feature-list">
+        <li>Requires manual data entry (time-consuming, error-prone)</li>
+        <li>Cannot access real-time patient data from electronic health records</li>
+        <li>No automated alerts or clinical decision support workflow</li>
+        <li>Not designed for production deployment or scalability</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">5. No Clinical Trial Validation</h3>
+    <div class="alert alert-danger">
+        <strong>Critical Limitation:</strong> The model has never been tested in a prospective clinical trial.
+    </div>
+    <p><strong>Implications:</strong></p>
+    <ul class="feature-list">
+        <li>Unknown impact on actual clinical outcomes (mortality, length of stay, appropriate therapy rates)</li>
+        <li>Potential unintended consequences not identified</li>
+        <li>No evidence that predictions improve patient care or reduce antimicrobial resistance</li>
+        <li>Regulatory approval (FDA, CE Mark) would require extensive clinical validation</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">6. Missing Features</h3>
+    <p><strong>Important clinical factors NOT included in the model:</strong></p>
+    <ul class="feature-list">
+        <li>Hospital antibiogram data (local resistance rates)</li>
+        <li>Infection source/site (pneumonia vs. urinary tract infection vs. bloodstream infection)</li>
+        <li>Recent travel history or residence in long-term care facilities</li>
+        <li>Specific bacterial isolate information (Gram-positive vs. Gram-negative)</li>
+        <li>Empirical antibiotic choices made by treating physicians</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">7. Temporal Generalization Concerns</h3>
+    <div class="alert alert-warning">
+        <strong>Limitation:</strong> Antimicrobial resistance patterns change over time.
+    </div>
+    <p><strong>Implications:</strong></p>
+    <ul class="feature-list">
+        <li>A model trained on 2008-2017 data may not accurately predict 2024+ resistance patterns</li>
+        <li>Requires periodic retraining with updated data</li>
+        <li>New resistance mechanisms (e.g., novel carbapenemases) may not be captured</li>
+    </ul>
+</div>
+
+<!-- Ethical Considerations -->
+<div class="content-section">
+    <h2>Ethical Considerations</h2>
+
+    <h3>1. No Automation of Treatment Decisions</h3>
+    <div class="alert alert-danger">
+        <strong>⚠ Ethical Principle:</strong> AI must augment, not replace, clinical judgment.
+    </div>
+    <p><strong>Guideline:</strong></p>
+    <ul class="feature-list">
+        <li>This system provides <strong>decision support</strong>, NOT <strong>treatment decisions</strong></li>
+        <li>Final antibiotic selection must always be made by qualified healthcare professionals</li>
+        <li>Physicians must integrate AI predictions with clinical context, patient history, and local guidelines</li>
+        <li>Over-reliance on AI predictions without critical evaluation poses patient safety risks</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">2. No Replacement of Clinicians or Laboratory Testing</h3>
+    <div class="alert alert-danger">
+        <strong>⚠ Ethical Principle:</strong> AI predictions do not replace microbiology labs or physician expertise.
+    </div>
+    <p><strong>Guideline:</strong></p>
+    <ul class="feature-list">
+        <li>Culture-based microbiology testing remains the gold standard for pathogen identification</li>
+        <li>AI risk scores are complementary to, not a substitute for, definitive diagnostics</li>
+        <li>Physicians bring irreplaceable clinical reasoning, ethical judgment, and patient communication</li>
+        <li>AI cannot account for nuanced factors like patient preferences, quality of life, or goals of care</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">3. Educational and Research Purpose Only</h3>
+    <div class="alert alert-info">
+        <strong>Ethical Use:</strong> This prototype is designed for academic learning and faculty evaluation.
+    </div>
+    <p><strong>Appropriate Uses:</strong></p>
+    <ul class="checkmark-list">
+        <li>Classroom demonstrations of healthcare AI applications</li>
+        <li>Academic presentations and project evaluations</li>
+        <li>Learning about machine learning workflows and feature engineering</li>
+        <li>Understanding clinical AI ethics and limitations</li>
+    </ul>
+    <p><strong>Inappropriate Uses:</strong></p>
+    <ul style="list-style: none; margin-left: 0;">
+        <li style="margin-bottom: 0.5rem;">✗ Making actual patient treatment decisions</li>
+        <li style="margin-bottom: 0.5rem;">✗ Deployment in real healthcare settings without validation</li>
+        <li style="margin-bottom: 0.5rem;">✗ Commercial use or marketing as a clinical product</li>
+        <li style="margin-bottom: 0.5rem;">✗ Substituting for proper medical training or expertise</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">4. Importance of Human Oversight</h3>
+    <p>
+        Even in a hypothetical deployment scenario, this system would require:
+    </p>
+    <ul class="feature-list">
+        <li><strong>Physician Review:</strong> Every prediction must be reviewed by qualified clinicians</li>
+        <li><strong>Local Validation:</strong> Performance must be validated on each hospital's patient population</li>
+        <li><strong>Continuous Monitoring:</strong> Ongoing surveillance for model drift, errors, and unintended
+            consequences</li>
+        <li><strong>Ethical Oversight:</strong> Institutional review board (IRB) approval for any patient-facing use
+        </li>
+        <li><strong>Informed Consent:</strong> Patients should be informed if AI is used in their care decisions</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">5. Privacy and Data Protection</h3>
+    <div class="alert alert-info">
+        <strong>Data Ethics:</strong> This project uses de-identified MIMIC-IV data with appropriate permissions.
+    </div>
+    <p><strong>Privacy Safeguards:</strong></p>
+    <ul class="feature-list">
+        <li>MIMIC-IV data is fully de-identified (no patient names, dates, or identifiers)</li>
+        <li>Data access requires CITI training and PhysioNet credentialing</li>
+        <li>No real patient data is collected or stored by this demonstration website</li>
+        <li>Any real-world deployment would require HIPAA compliance and data security measures</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">6. Potential Unintended Consequences</h3>
+    <p>
+        AI systems in healthcare can have unintended effects that must be carefully monitored:
+    </p>
+    <ul class="feature-list">
+        <li><strong>Overuse of Broad-Spectrum Antibiotics:</strong> High risk scores may lead to unnecessary escalation
+        </li>
+        <li><strong>Diagnostic Anchoring:</strong> Clinicians may over-trust AI predictions and miss alternative
+            diagnoses</li>
+        <li><strong>Health Disparities:</strong> If training data underrepresents certain populations, predictions may
+            be less accurate for those groups</li>
+        <li><strong>Automation Bias:</strong> Tendency to favor AI-generated predictions over contradictory clinical
+            evidence</li>
+    </ul>
+</div>
+
+<!-- Responsible Development Principles -->
+<div class="content-section">
+    <h2>Responsible AI Development Principles</h2>
+
+    <p>This project adheres to responsible AI principles for healthcare applications:</p>
+
+    <div class="card-grid">
+        <div class="card">
+            <h3>🔍 Transparency</h3>
+            <p>Model architecture, training data, and limitations are fully disclosed</p>
+        </div>
+
+        <div class="card">
+            <h3>⚖️ Fairness</h3>
+            <p>Aware of potential biases; performance should be evaluated across demographic groups</p>
+        </div>
+
+        <div class="card">
+            <h3>🛡️ Safety</h3>
+            <p>Clear disclaimers prevent misuse; emphasizes human oversight</p>
+        </div>
+
+        <div class="card">
+            <h3>📚 Accountability</h3>
+            <p>Developers acknowledge responsibility to report limitations and risks</p>
+        </div>
+
+        <div class="card">
+            <h3>🔒 Privacy</h3>
+            <p>Uses de-identified data with appropriate permissions</p>
+        </div>
+
+        <div class="card">
+            <h3>🎯 Beneficence</h3>
+            <p>Designed to support, not replace, clinicians in improving patient care</p>
+        </div>
+    </div>
+</div>
+
+<!-- Path to Clinical Deployment -->
+<div class="content-section">
+    <h2>What Would Be Required for Real Clinical Deployment?</h2>
+
+    <p>
+        If this were to transition from an academic prototype to a real clinical tool, the following steps
+        would be essential:
+    </p>
+
+    <ol class="numbered-list">
+        <li><strong>Multi-Center Validation:</strong> Test on data from diverse hospitals and geographic regions</li>
+        <li><strong>Prospective Clinical Trial:</strong> Randomized controlled trial measuring impact on patient
+            outcomes</li>
+        <li><strong>Regulatory Approval:</strong> Submit to FDA (Software as a Medical Device) or equivalent regulatory
+            bodies</li>
+        <li><strong>Integration with EHR:</strong> Seamless, automated data input and clinician workflow integration
+        </li>
+        <li><strong>Local Customization:</strong> Incorporate hospital-specific antibiogram and resistance patterns</li>
+        <li><strong>Continuous Monitoring:</strong> Track model performance, drift, and clinical outcomes
+            post-deployment</li>
+        <li><strong>Clinician Training:</strong> Educate healthcare providers on appropriate use and interpretation</li>
+        <li><strong>Ethical Review:</strong> Institutional review board approval and ethics committee oversight</li>
+        <li><strong>Patient Engagement:</strong> Develop patient-facing materials and consent processes</li>
+        <li><strong>Health Equity Analysis:</strong> Ensure equitable performance across patient demographics</li>
+    </ol>
+
+    <div class="alert alert-danger" style="margin-top: 1.5rem;">
+        <strong>Final Reminder:</strong> None of these steps have been completed for this academic prototype.
+        This system is strictly for educational purposes and must not be used in any real clinical context.
+    </div>
+</div>
+{% endblock %}

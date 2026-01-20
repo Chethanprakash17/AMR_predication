@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="AI-Based Early AMR Risk Prediction in ICU Patients - Academic Experiential Learning Project">
+    <title>{% block title %}AMR Risk Prediction{% endblock %} | EL Phase-2 Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>AI-Based Early Antimicrobial Resistance (AMR) Risk Prediction in ICU Patients</h1>
+            <p class="subtitle">Experiential Learning (EL) Project | Using EHR Data </p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <ul class="nav-list">
+                <li><a href="{{ url_for('index') }}" {% if request.endpoint=='index' %}class="active" {% endif
+                        %}>Home</a></li>
+                <li><a href="{{ url_for('about_amr') }}" {% if request.endpoint=='about_amr' %}class="active" {% endif
+                        %}>About AMR</a></li>
+                <li><a href="{{ url_for('dataset') }}" {% if request.endpoint=='dataset' %}class="active" {% endif
+                        %}>Dataset & Methodology</a></li>
+                <li><a href="{{ url_for('prediction') }}" {% if request.endpoint=='prediction' %}class="active" {% endif
+                        %}>Prediction Demo</a></li>
+                <li><a href="{{ url_for('explainability') }}" {% if request.endpoint=='explainability' %}class="active"
+                        {% endif %}>Explainability</a></li>
+                <li><a href="{{ url_for('results') }}" {% if request.endpoint=='results' %}class="active" {% endif
+                        %}>Results & Evaluation</a></li>
+                <li><a href="{{ url_for('limitations') }}" {% if request.endpoint=='limitations' %}class="active" {%
+                        endif %}>Limitations & Ethics</a></li>
+                <li><a href="{{ url_for('team') }}" {% if request.endpoint=='team' %}class="active" {% endif %}>Team &
+                        References</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p><strong>Academic Research Prototype</strong></p>
+            <p>This system is developed for educational purposes only and is not intended for real clinical use.</p>
+            <p>&copy; 2026 Experiential Learning Project | RV College of Engineering</p>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

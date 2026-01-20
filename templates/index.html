@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Welcome Section -->
+<div class="content-section">
+    <h2>Welcome to the AMR Risk Prediction System</h2>
+    <p>
+        This website demonstrates an end-to-end AI workflow for predicting the risk of <strong>antimicrobial resistance
+            (AMR)</strong>
+        in Intensive Care Unit (ICU) patients using early Electronic Health Record (EHR) data collected during
+        ICU admission.
+    </p>
+
+    <div class="disclaimer">
+        <strong>⚠ Academic Research Prototype</strong>
+        This system is a research prototype developed for academic purposes only and is not intended for real clinical
+        use.
+        All predictions are for demonstration and educational evaluation as part of the Experiential Learning (EL)
+        project.
+    </div>
+</div>
+
+<!-- Problem Statement -->
+<div class="content-section">
+    <h2>The Problem: AMR in ICU Settings</h2>
+    <p>
+        Antimicrobial resistance (AMR) is a critical global health threat, particularly dangerous in ICU settings where
+        critically ill patients are highly vulnerable to resistant infections. Traditional microbiology culture tests
+        require 48–72 hours to identify resistant pathogens, creating a diagnostic delay that can compromise patient
+        outcomes.
+    </p>
+    <p>
+        Our AI-based system provides an <strong>early probability-based AMR risk score</strong> using EHR data collected
+        during ICU admission, potentially supporting clinicians in making more informed early treatment decisions while
+        awaiting
+        confirmatory culture results.
+    </p>
+
+    <div class="card-grid">
+        <div class="card">
+            <h3>🎯 Our Goal</h3>
+            <p>Develop a machine learning model to predict AMR risk early in ICU admission using readily available EHR
+                data.</p>
+        </div>
+
+        <div class="card">
+            <h3>📊 Data Source</h3>
+            <p>MIMIC-IV ICU Clinical Database containing comprehensive EHR data from ~30,000-40,000 ICU admissions.</p>
+        </div>
+
+        <div class="card">
+            <h3>🤖 Approach</h3>
+            <p>XGBoost classifier trained on demographics, vitals, labs, and comorbidities from the EHR data collected
+                during ICU admission.</p>
+        </div>
+    </div>
+</div>
+
+<!-- System Workflow -->
+<div class="content-section">
+    <h2>System Workflow Overview</h2>
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='images/workflow_diagram.png') }}" alt="AMR Risk Prediction Workflow">
+        <p class="image-caption">Figure 1: End-to-end workflow from EHR data collection to AMR risk score generation</p>
+    </div>
+
+    <p style="margin-top: 1.5rem;">
+        The system operates in four stages:
+    </p>
+    <ol class="numbered-list">
+        <li><strong>EHR Data Collection:</strong> Gather patient data during the inital hours after ICU admission</li>
+        <li><strong>Feature Engineering:</strong> Extract and process demographics, vitals, labs, and comorbidities</li>
+        <li><strong>ML Model:</strong> XGBoost classifier processes features to calculate risk</li>
+        <li><strong>AMR Risk Score:</strong> Output probability score indicating likelihood of antimicrobial resistance
+        </li>
+    </ol>
+</div>
+
+<!-- What This System Does and Does NOT Do -->
+<div class="content-section">
+    <h2>System Scope & Limitations</h2>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+        <div>
+            <h3 style="color: var(--risk-low);">✓ What This System DOES</h3>
+            <ul class="checkmark-list">
+                <li>Provides an early AMR risk probability score</li>
+                <li>Supports clinical decision-making</li>
+                <li>Offers transparent, explainable predictions</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 style="color: var(--risk-high);">✗ What This System Does NOT Do</h3>
+            <ul style="list-style: none; margin-left: 0;">
+                <li style="margin-bottom: 0.5rem;">✗ Prescribe antibiotics</li>
+                <li style="margin-bottom: 0.5rem;">✗ Replace doctors or clinical judgment</li>
+                <li style="margin-bottom: 0.5rem;">✗ Make diagnostic or treatment decisions</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="alert alert-info" style="margin-top: 1.5rem;">
+        <strong>Clinical Context:</strong> The final clinical decision always remains with the attending physician.
+        This system is intended to augment, not replace, existing clinical workflows.
+    </div>
+</div>
+
+<!-- Quick Navigation -->
+<div class="content-section">
+    <h2>Explore the Project</h2>
+    <div class="card-grid">
+        <div class="card">
+            <h3>📚 Learn About AMR</h3>
+            <p>Understand antimicrobial resistance and why early prediction matters in ICU settings.</p>
+            <a href="{{ url_for('about_amr') }}" style="font-weight: 600;">Learn More →</a>
+        </div>
+
+        <div class="card">
+            <h3>🔬 Dataset & Methods</h3>
+            <p>Explore the MIMIC-IV dataset, feature engineering, and labeling methodology.</p>
+            <a href="{{ url_for('dataset') }}" style="font-weight: 600;">View Details →</a>
+        </div>
+
+        <div class="card">
+            <h3>🎯 Try the Demo</h3>
+            <p>Input simulated patient data and see the AMR risk prediction in action.</p>
+            <a href="{{ url_for('prediction') }}" style="font-weight: 600;">Launch Demo →</a>
+        </div>
+
+        <div class="card">
+            <h3>📊 View Results</h3>
+            <p>Review model performance metrics and evaluation results.</p>
+            <a href="{{ url_for('results') }}" style="font-weight: 600;">See Results →</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block title %}Model Explainability{% endblock %}
+
+{% block content %}
+<!-- Introduction -->
+<div class="content-section">
+    <h2>Model Explainability & Transparency</h2>
+    <p>
+        Understanding <em>why</em> a model makes certain predictions is crucial for clinical trust and adoption.
+        This page provides insights into which features contribute most to AMR risk predictions and how the model
+        makes its decisions.
+    </p>
+
+    <div class="alert alert-info">
+        <strong>Why Explainability Matters:</strong> Clinicians need to understand the reasoning behind AI predictions
+        to make informed decisions. Black-box models that provide scores without explanation are difficult to trust
+        and integrate into clinical workflows.
+    </div>
+</div>
+
+<!-- Feature Importance -->
+<div class="content-section">
+    <h2>Feature Importance Analysis</h2>
+
+    <p>
+        The XGBoost model provides <strong>feature importance scores</strong> that indicate how much each feature
+        contributes to the prediction. Higher scores mean that feature has more influence on the model's decisions.
+    </p>
+
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='images/feature_importance.png') }}" alt="Feature Importance Chart">
+        <p class="image-caption">Figure 1: Top 10 most important features for AMR risk prediction</p>
+    </div>
+
+    <h3 style="margin-top: 1.5rem;">Key Findings</h3>
+    <p>The most influential factors in predicting AMR risk are:</p>
+
+    <div class="card-grid">
+        <div class="card">
+            <h3>1. Prior Antibiotic Exposure</h3>
+            <p><strong>Importance: 0.18</strong></p>
+            <p>
+                Patients with recent antibiotic use have significantly higher AMR risk. Antibiotic exposure creates
+                selective pressure that promotes resistant bacterial strains.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>2. Broad-Spectrum Antibiotic Use</h3>
+            <p><strong>Importance: 0.15</strong></p>
+            <p>
+                Use of broad-spectrum antibiotics (e.g., carbapenems, vancomycin) in the past 90 days is strongly
+                associated with AMR development.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>3. Age</h3>
+            <p><strong>Importance: 0.12</strong></p>
+            <p>
+                Older patients (≥65 years) show increased AMR risk, likely due to cumulative healthcare exposure,
+                comorbidities, and age-related immune changes.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>4. Mechanical Ventilation</h3>
+            <p><strong>Importance: 0.11</strong></p>
+            <p>
+                Patients requiring mechanical ventilation are at higher risk for ventilator-associated pneumonia (VAP)
+                caused by resistant organisms.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>5. ICU Length of Stay</h3>
+            <p><strong>Importance: 0.10</strong></p>
+            <p>
+                Longer ICU stays increase exposure to nosocomial (hospital-acquired) resistant pathogens.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>6. Lactate Level</h3>
+            <p><strong>Importance: 0.09</strong></p>
+            <p>
+                Elevated lactate indicates sepsis severity. Patients with severe sepsis often have more aggressive
+                infections, including resistant organisms.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Clinical Interpretation -->
+<div class="content-section">
+    <h2>Clinical Interpretation of Feature Contributions</h2>
+
+    <h3>Antibiotic History (Most Important)</h3>
+    <p>
+        The model consistently prioritizes <strong>antibiotic exposure history</strong> as the strongest predictor.
+        This aligns with clinical evidence that prior antibiotic use is the most significant modifiable risk factor
+        for AMR development. Key mechanisms include:
+    </p>
+    <ul class="feature-list">
+        <li><strong>Selective Pressure:</strong> Antibiotics kill susceptible bacteria, allowing resistant strains to
+            proliferate</li>
+        <li><strong>Microbiome Disruption:</strong> Broad-spectrum antibiotics disrupt normal flora, reducing
+            colonization resistance</li>
+        <li><strong>Persistent Colonization:</strong> Resistant organisms can persist in the gut for months after
+            antibiotic exposure</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">Severity Indicators</h3>
+    <p>
+        Features like <strong>mechanical ventilation, lactate levels, and WBC count</strong> reflect illness severity.
+        Severely ill patients are more likely to:
+    </p>
+    <ul class="feature-list">
+        <li>Have aggressive infections requiring prolonged hospitalization</li>
+        <li>Require invasive devices that serve as bacterial entry points</li>
+        <li>Have compromised immune function making them vulnerable to resistant pathogens</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">Comorbidities</h3>
+    <p>
+        Chronic conditions like <strong>diabetes, CKD, and immunosuppression</strong> contribute to AMR risk through:
+    </p>
+    <ul class="feature-list">
+        <li>Frequent healthcare encounters and antibiotic exposure</li>
+        <li>Impaired immune response to infections</li>
+        <li>Chronic wounds (diabetes) that harbor resistant organisms</li>
+    </ul>
+</div>
+
+<!-- Explainability Techniques -->
+<div class="content-section">
+    <h2>Explainability Techniques Used</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Technique</th>
+                <th>Purpose</th>
+                <th>Implementation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Feature Importance (Gini)</strong></td>
+                <td>Global explanation of model behavior</td>
+                <td>Built-in XGBoost metric measuring average information gain per feature</td>
+            </tr>
+            <tr>
+                <td><strong>Permutation Importance</strong></td>
+                <td>Validate feature importance</td>
+                <td>Measure prediction error increase when feature values are randomly shuffled</td>
+            </tr>
+            <tr>
+                <td><strong>Partial Dependence Plots</strong></td>
+                <td>Visualize feature-prediction relationships</td>
+                <td>Show how AMR risk changes as individual features vary (future enhancement)</td>
+            </tr>
+            <tr>
+                <td><strong>SHAP Values (Optional)</strong></td>
+                <td>Instance-level explanations</td>
+                <td>Explain individual predictions using Shapley values (future enhancement)</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Building Clinical Trust -->
+<div class="content-section">
+    <h2>Building Clinical Trust Through Transparency</h2>
+
+    <p>
+        For AI systems to be adopted in healthcare, clinicians must understand and trust their predictions.
+        Explainability helps achieve this through:
+    </p>
+
+    <div class="card-grid">
+        <div class="card">
+            <h3>🔍 Clinical Validation</h3>
+            <p>Feature importance aligns with known AMR risk factors from clinical literature</p>
+        </div>
+
+        <div class="card">
+            <h3>📚 Educational Value</h3>
+            <p>Reinforces evidence-based understanding of AMR drivers among healthcare providers</p>
+        </div>
+
+        <div class="card">
+            <h3>⚡ Debugging & Auditing</h3>
+            <p>Allows identification of potential biases or errors in model reasoning</p>
+        </div>
+
+        <div class="card">
+            <h3>🤝 Shared Decision-Making</h3>
+            <p>Enables clinicians to incorporate AI insights alongside their clinical judgment</p>
+        </div>
+    </div>
+
+    <div class="alert alert-info" style="margin-top: 1.5rem;">
+        <strong>Best Practice:</strong> Always present model predictions alongside explanations of contributing factors.
+        This empowers clinicians to critically evaluate the model's reasoning and determine if it makes clinical sense
+        for each specific patient.
+    </div>
+</div>
+
+<!-- Example Prediction Breakdown -->
+<div class="content-section">
+    <h2>Example: High-Risk Patient Profile</h2>
+
+    <div
+        style="background-color: var(--bg-light); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--risk-high);">
+        <h3 style="color: var(--risk-high);">Case: AMR Risk Score = 72% (High Risk)</h3>
+
+        <h4 style="margin-top: 1rem;">Patient Characteristics:</h4>
+        <ul class="feature-list">
+            <li>78-year-old male</li>
+            <li>Emergency ICU admission with septic shock</li>
+            <li>Recent hospitalization with broad-spectrum antibiotic use (30 days ago)</li>
+            <li>Comorbidities: Diabetes, CKD Stage 3</li>
+            <li>Requiring mechanical ventilation</li>
+            <li>Elevated lactate (4.2 mmol/L), elevated WBC (18.5 ×10³/µL)</li>
+        </ul>
+
+        <h4 style="margin-top: 1rem;">Top Contributing Factors:</h4>
+        <ol class="numbered-list">
+            <li><strong>Recent broad-spectrum antibiotic use</strong> - Highest contributor</li>
+            <li><strong>Mechanical ventilation</strong> - Invasive device risk</li>
+            <li><strong>Age &gt; 65</strong> - Increased vulnerability</li>
+            <li><strong>Elevated lactate</strong> - Sepsis severity indicator</li>
+            <li><strong>Diabetes + CKD</strong> - Multiple comorbidities</li>
+        </ol>
+
+        <h4 style="margin-top: 1rem;">Clinical Recommendation:</h4>
+        <p>
+            This patient's high AMR risk score, driven primarily by recent antibiotic exposure and severity indicators,
+            may warrant empirical broad-spectrum therapy covering resistant gram-negative organisms while awaiting
+            culture results.
+        </p>
+    </div>
+</div>
+{% endblock %}

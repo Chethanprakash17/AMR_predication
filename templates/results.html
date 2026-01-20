@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}Results & Evaluation{% endblock %}
+
+{% block content %}
+<!-- Introduction -->
+<div class="content-section">
+    <h2>Model Performance & Evaluation Results</h2>
+    <p>
+        This page presents the performance metrics and evaluation results of our XGBoost classifier for
+        AMR risk prediction. The model was trained on MIMIC-IV data using a temporal train-test split to ensure
+        realistic evaluation.
+    </p>
+</div>
+
+<!-- Model Information -->
+<div class="content-section">
+    <h2>Model Architecture</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Attribute</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Algorithm</strong></td>
+                <td>XGBoost Classifier (Ensemble Learning)</td>
+            </tr>
+            <tr>
+                <td><strong>Number of Trees</strong></td>
+                <td>100 decision trees</td>
+            </tr>
+            <tr>
+                <td><strong>Max Depth</strong></td>
+                <td>15 (prevents overfitting)</td>
+            </tr>
+            <tr>
+                <td><strong>Min Samples Split</strong></td>
+                <td>50 (ensures robust splits)</td>
+            </tr>
+            <tr>
+                <td><strong>Class Weighting</strong></td>
+                <td>Balanced (accounts for class imbalance)</td>
+            </tr>
+            <tr>
+                <td><strong>Input Features</strong></td>
+                <td>32 features (demographics, vitals, labs, comorbidities)</td>
+            </tr>
+            <tr>
+                <td><strong>Training Framework</strong></td>
+                <td>Scikit-learn (Python)</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Training Strategy -->
+<div class="content-section">
+    <h2>Training & Evaluation Strategy</h2>
+
+    <h3>Temporal Train-Test Split</h3>
+    <p>
+        To simulate real-world deployment and test the model's ability to generalize to future patients, we used
+        a <strong>temporal split</strong> rather than random sampling:
+    </p>
+
+    <table style="max-width: 600px;">
+        <thead>
+            <tr>
+                <th>Dataset</th>
+                <th>Time Period</th>
+                <th>Sample Size</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Training Set</strong></td>
+                <td>2008 - 2017</td>
+                <td>~24,500 admissions</td>
+                <td>70%</td>
+            </tr>
+            <tr>
+                <td><strong>Test Set</strong></td>
+                <td>2018 - 2019</td>
+                <td>~10,500 admissions</td>
+                <td>30%</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="alert alert-info" style="margin-top: 1rem;">
+        <strong>Why Temporal Split?</strong> Random train-test splits can leak information from future patients into
+        training data. A temporal split ensures the model learns from historical data and is tested on genuinely
+        unseen future patients, better reflecting real-world performance.
+    </div>
+
+    <h3 style="margin-top: 1.5rem;">Cross-Validation</h3>
+    <p>
+        During model development, we performed <strong>5-fold stratified cross-validation</strong> on the training
+        set for hyperparameter tuning and model selection. Stratification ensures each fold maintains the same
+        class balance (AMR positive vs. negative).
+    </p>
+</div>
+
+<!-- Performance Metrics -->
+<div class="content-section">
+    <h2>Performance Metrics</h2>
+
+    <h3>Test Set Results</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Score</th>
+                <th>Interpretation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background-color: #E6F2FF;">
+                <td><strong>AUROC</strong></td>
+                <td><strong>0.82</strong></td>
+                <td>Strong discriminative ability to distinguish AMR positive from negative cases</td>
+            </tr>
+            <tr style="background-color: #FEF3C7;">
+                <td><strong>Recall (Sensitivity)</strong></td>
+                <td><strong>0.78</strong></td>
+                <td>Correctly identifies 78% of true AMR positive cases</td>
+            </tr>
+            <tr>
+                <td><strong>Precision</strong></td>
+                <td><strong>0.65</strong></td>
+                <td>65% of predicted positive cases are true positives</td>
+            </tr>
+            <tr>
+                <td><strong>F1-Score</strong></td>
+                <td><strong>0.71</strong></td>
+                <td>Balanced measure of precision and recall</td>
+            </tr>
+            <tr>
+                <td><strong>Specificity</strong></td>
+                <td><strong>0.84</strong></td>
+                <td>Correctly identifies 84% of true AMR negative cases</td>
+            </tr>
+            <tr>
+                <td><strong>Accuracy</strong></td>
+                <td><strong>0.82</strong></td>
+                <td>Overall proportion of correct predictions</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="alert alert-warning" style="margin-top: 1rem;">
+        <strong>Metric Interpretation:</strong> While accuracy is intuitive, it can be misleading with imbalanced
+        datasets.
+        AUROC and recall are more informative for clinical applications where missing a positive case (false negative)
+        has more serious consequences than a false alarm (false positive).
+    </div>
+</div>
+
+<!-- ROC Curve -->
+<div class="content-section">
+    <h2>ROC Curve Analysis</h2>
+
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='images/roc_curve.png') }}" alt="ROC Curve">
+        <p class="image-caption">Figure 1: Receiver Operating Characteristic (ROC) Curve - AUC = 0.82</p>
+    </div>
+
+    <p style="margin-top: 1.5rem;">
+        The <strong>ROC curve</strong> plots the True Positive Rate (sensitivity) against the False Positive Rate
+        (1 - specificity) across different probability thresholds. Key points:
+    </p>
+    <ul class="feature-list">
+        <li><strong>AUC = 0.82:</strong> Values &gt; 0.80 indicate strong predictive performance</li>
+        <li><strong>Curve Position:</strong> The closer the curve to the top-left corner, the better</li>
+        <li><strong>Baseline (diagonal):</strong> Represents random chance (AUC = 0.50)</li>
+        <li><strong>Clinical Utility:</strong> Allows selection of optimal threshold based on risk tolerance</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">Threshold Selection</h3>
+    <p>
+        The default threshold is 0.50 (50% probability), but clinicians can adjust this based on context:
+    </p>
+    <ul class="feature-list">
+        <li><strong>Lower threshold (e.g., 0.30):</strong> Increases sensitivity (fewer missed cases) at cost of more
+            false positives</li>
+        <li><strong>Higher threshold (e.g., 0.70):</strong> Increases specificity (fewer false alarms) at cost of more
+            missed cases</li>
+        <li><strong>ICU Setting:</strong> Lower threshold preferred to minimize missing AMR cases in critically ill
+            patients</li>
+    </ul>
+</div>
+
+<!-- Why Recall is Critical -->
+<div class="content-section">
+    <h2>Why Recall (Sensitivity) Is Prioritized in ICU Settings</h2>
+
+    <p>
+        In our model, we prioritize <strong>recall (sensitivity)</strong> over precision. Here's why this matters:
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+        <div
+            style="background-color: #FEE2E2; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--risk-high);">
+            <h3 style="color: var(--risk-high);">❌ False Negative (Missed AMR Case)</h3>
+            <p><strong>High Clinical Risk:</strong></p>
+            <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                <li>Patient receives narrow-spectrum antibiotic</li>
+                <li>Pathogen is actually resistant</li>
+                <li>Treatment fails, patient deteriorates</li>
+                <li>Delayed appropriate therapy = worse outcomes</li>
+                <li><strong>Potential consequence: Death</strong></li>
+            </ul>
+        </div>
+
+        <div
+            style="background-color: #FEF3C7; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--risk-moderate);">
+            <h3 style="color: var(--risk-moderate);">⚠ False Positive (False Alarm)</h3>
+            <p><strong>Lower Clinical Risk:</strong></p>
+            <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                <li>Patient receives broader-spectrum antibiotic</li>
+                <li>Pathogen is actually susceptible</li>
+                <li>Treatment is effective (though broader than needed)</li>
+                <li>Minor downside: contributes to AMR development</li>
+                <li><strong>Consequence: Manageable</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="alert alert-danger" style="margin-top: 1.5rem;">
+        <strong>Clinical Imperative:</strong> In ICU settings with critically ill patients, it is safer to err on the
+        side
+        of caution. Missing an AMR case (false negative) can be fatal, while treating a susceptible case with broader
+        antibiotics (false positive) is suboptimal but generally safe. Therefore, <strong>high recall is
+            prioritized</strong>.
+    </div>
+</div>
+
+<!-- Comparison with Baselines -->
+<div class="content-section">
+    <h2>Comparison with Baseline Approaches</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Approach</th>
+                <th>AUROC</th>
+                <th>Recall</th>
+                <th>Precision</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background-color: #E6F2FF;">
+                <td><strong>XGBoost (Our Model)</strong></td>
+                <td><strong>0.82</strong></td>
+                <td><strong>0.78</strong></td>
+                <td><strong>0.65</strong></td>
+            </tr>
+            <tr>
+                <td>Logistic Regression</td>
+                <td>0.75</td>
+                <td>0.71</td>
+                <td>0.59</td>
+            </tr>
+            <tr>
+                <td>XGBoost</td>
+                <td>0.81</td>
+                <td>0.76</td>
+                <td>0.64</td>
+            </tr>
+            <tr>
+                <td>Simple Risk Score (Age + Prior Antibiotics)</td>
+                <td>0.68</td>
+                <td>0.65</td>
+                <td>0.52</td>
+            </tr>
+            <tr>
+                <td>Random Chance</td>
+                <td>0.50</td>
+                <td>0.50</td>
+                <td>0.32</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 1rem;">
+        The XGBoost model outperforms simpler approaches while maintaining interpretability through
+        feature importance analysis. XGBoost achieves similar performance but is less interpretable.
+    </p>
+</div>
+
+<!-- Strengths and Limitations -->
+<div class="content-section">
+    <h2>Model Strengths</h2>
+    <ul class="checkmark-list">
+        <li>Strong discriminative performance (AUROC = 0.82)</li>
+        <li>High recall (0.78) minimizes missed AMR cases</li>
+        <li>Early prediction using only first 24 hours of data</li>
+        <li>Interpretable feature importance for clinical trust</li>
+        <li>Validated on temporal hold-out set (realistic evaluation)</li>
+        <li>Robust to class imbalance through proper weighting</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem;">Acknowledged Limitations</h3>
+    <p>See the <a href="{{ url_for('limitations') }}">Limitations & Ethics</a> page for a comprehensive discussion of
+        model limitations.</p>
+</div>
+{% endblock %}
